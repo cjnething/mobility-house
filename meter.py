@@ -5,13 +5,7 @@ from datetime import date, datetime, time, timedelta
 import json
 
 def main():
-    # cred = pika.PlainCredentials('guest', 'guest')
-    params = pika.ConnectionParameters(
-        host='host.docker.internal',
-        port=5672,
-        virtual_host='/',
-        # credentials=cred
-    )
+    params = pika.ConnectionParameters(host='localhost')
     connection = pika.BlockingConnection(params)
     channel = connection.channel()
 
@@ -26,7 +20,6 @@ def main():
     while curr_time <= end_time:
         # Floating values
         meter_value = random.uniform(0, 9000)
-        print(curr_time)
         message = {
             'time': curr_time,
             'meter_value': meter_value,

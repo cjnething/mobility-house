@@ -7,7 +7,7 @@ def callback(ch, method, properties, body):
 
 def main():
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='host.docker.internal', port=5672, virtual_host='/'))
+        pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
 
     channel.queue_declare(queue='task_queue', durable=True)
