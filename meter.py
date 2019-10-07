@@ -15,7 +15,6 @@ def main():
     start_time = datetime.combine(date.today(), time.min).timestamp()
     end_time = datetime.combine(date.today(), time.max).timestamp()
     curr_time = start_time
-    print("-------")
 
     while curr_time <= end_time:
         # Floating values
