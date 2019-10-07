@@ -21,6 +21,12 @@ This will print the results of the simulation to the `results.txt` file:
 
 `python3 run.py`
 
+You should then be able to go to `http://localhost:15672` to view the queue logs.
+```
+username: guest
+password: guest
+```
+
 ## Run Tests
 `python3 -m unittest tests/test.py`
 

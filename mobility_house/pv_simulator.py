@@ -45,10 +45,10 @@ def simulate_pv_output():
         pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
 
-    channel.queue_declare(queue='task_queue', durable=True)
+    channel.queue_declare(queue='meter_value_queue', durable=True)
 
     channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue='task_queue', on_message_callback=callback)
+    channel.basic_consume(queue='meter_value_queue', on_message_callback=callback)
 
     channel.start_consuming()
 
