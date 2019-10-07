@@ -1,4 +1,4 @@
-# Mobility House README
+# Mobility House Coding Challenge
 
 # Quick Start Guide
 ## Set Up
@@ -17,7 +17,8 @@ If rabbitmq is not running, it may be necessary to start the server:
 `rabbitmq-server`
 
 ## Run Simulation
-This will print the results of the simulation to the `results.txt` file.
+This will print the results of the simulation to the `results.txt` file:
+
 `python3 run.py`
 
 ## Run Tests

@@ -8,7 +8,6 @@ class TestSimulator(unittest.TestCase):
 
     # PV Simulator Tests
     def test_get_pv_value_below_mean(self):
-        print(get_pv_value(8 * 60 * 60))
         time_before_mean = random.randrange(0, mean) # not inclusive
         self.assertTrue(int(get_pv_value(time_before_mean)) < max_pv, "Any PV value before the mean time should be below the max PV.")
 
