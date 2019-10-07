@@ -27,6 +27,8 @@ username: guest
 password: guest
 ```
 
+When the program is finished running, a page should open in your browser displaying a graph of the simulation.
+
 ## Run Tests
 `python3 -m unittest tests/test.py`
 

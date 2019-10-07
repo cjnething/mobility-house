@@ -10,6 +10,9 @@ max_wattage = 9000
 min_period_length = time_interval
 # Max period length is 4 hours (in seconds)
 max_period_length = 4 * 60 * 60
+# Midnight to midnight of day (in seconds)
+start_time = 0
+end_time = 24 * 60 * 60
 
 
 def get_period_length():
@@ -22,9 +25,6 @@ def simulate_meter():
 
     channel.queue_declare(queue='meter_value_queue', durable=True)
 
-    # Midnight to midnight of day (in seconds)
-    start_time = 0
-    end_time = 24 * 60 * 60
     curr_time = start_time
 
     # Create meter values in steps (periods) to make it more realistic

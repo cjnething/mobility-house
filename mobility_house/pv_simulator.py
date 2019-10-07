@@ -1,8 +1,11 @@
 import pika
 import time
 import json
-from datetime import timedelta
+import pandas as pd
+from datetime import timedelta, datetime, date, time
 from math import sqrt, pi, e
+import plotly.express as px
+from mobility_house.meter import end_time, time_interval
 
 # Peak x value (mean) is at 2 PM (in seconds)
 mean = 14 * 60 * 60
@@ -15,6 +18,30 @@ val_at_mean = 1/(std_deviation * sqrt(2 * pi))
 # The multiplier to convert that probability to wattage
 multiplier = max_pv/val_at_mean
 
+# Data structures for the charts
+data_time = []
+data_watts = []
+data_type = []
+
+
+def plot_values():
+    df = pd.DataFrame({
+        'Time': data_time,
+        'Watts': data_watts,
+        'Type': data_type,
+        })
+
+    df['Time'] = pd.to_datetime(df['Time'])
+
+    figure = px.line(df, x='Time', y='Watts', color='Type', title='PV Simulation')
+    figure.layout.images = [dict(
+        source="https://www.mobilityhouse.com/media/logo/default/tmh_logo.png",
+        xref="paper", yref="paper",
+        x=0.5, y=1.08,
+        sizex=0.3, sizey=0.3,
+        xanchor="center", yanchor="middle"
+    )]
+    figure.show()
 
 def get_pv_value(time):
     return (multiplier/(std_deviation * sqrt(2 * pi))) * e**(-0.5 * ((time - mean)/std_deviation)**2)
@@ -30,12 +57,32 @@ def callback(ch, method, properties, body):
     msg_meter_value = float(msg_body["meter_value"])
 
     pv_value = get_pv_value(msg_time)
-    net_usage = pv_value - msg_meter_value
+    total_usage = pv_value - msg_meter_value
+
+    # Store data for charts
+    chart_time = datetime.combine(date.today(), time.min) + msg_datetime
+    # Meter
+    data_time.append(chart_time)
+    data_watts.append(msg_meter_value)
+    data_type.append('Meter')
+    # PV
+    data_time.append(chart_time)
+    data_watts.append(pv_value)
+    data_type.append('PV')
+    # Total
+    data_time.append(chart_time)
+    data_watts.append(total_usage)
+    data_type.append('Total')
 
     with open('results.txt', 'a') as results:
         results.write(str(msg_datetime) + ' - Meter (Watts): ' + str(msg_meter_value)
                                         + ', PV (Watts): ' + str(pv_value)
-                                        + ', Total Usage (Watts): ' + str(net_usage) + '\n')
+                                        + ', Total Usage (Watts): ' + str(total_usage) + '\n')
+
+    # The end of the messages
+    if msg_time + time_interval >= end_time:
+        plot_values()
+
 
 def simulate_pv_output():
     # Clear the results file
