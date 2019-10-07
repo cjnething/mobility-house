@@ -33,11 +33,11 @@ def callback(ch, method, properties, body):
     net_usage = pv_value - msg_meter_value
 
     with open('results.txt', 'a') as results:
-        results.write(str(msg_datetime) + ' - Meter: ' + str(msg_meter_value)
-                                        + ', PV: ' + str(pv_value)
-                                        + ', Net Usage: ' + str(net_usage) + '\n')
+        results.write(str(msg_datetime) + ' - Meter (Watts): ' + str(msg_meter_value)
+                                        + ', PV (Watts): ' + str(pv_value)
+                                        + ', Total Usage (Watts): ' + str(net_usage) + '\n')
 
-def main():
+def simulate_pv_output():
     # Clear the results file
     with open('results.txt','w'): pass
 
@@ -53,4 +53,4 @@ def main():
     channel.start_consuming()
 
 if __name__ == '__main__':
-  main()
+  simulate_pv_output()
