@@ -1,7 +1,6 @@
 import sys
 import pika
 import random
-from datetime import date, datetime, time, timedelta
 import json
 
 def main():
@@ -12,11 +11,11 @@ def main():
     channel.queue_declare(queue='task_queue', durable=True)
 
     # Midnight to midnight of current day
-    start_time = datetime.combine(date.today(), time.min).timestamp()
-    end_time = datetime.combine(date.today(), time.max).timestamp()
+    start_time = 0
+    end_time = 24 * 60 * 60
     curr_time = start_time
 
-    while curr_time <= end_time:
+    while curr_time < end_time:
         # Floating values
         meter_value = random.uniform(0, 9000)
         message = {

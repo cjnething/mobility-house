@@ -8,3 +8,6 @@ pip3 install -r requirements.txt
 
 
 # If there are problems: rabbitmq-server restart
+
+
+# Normal distribution: http://mathworld.wolfram.com/NormalDistribution.html

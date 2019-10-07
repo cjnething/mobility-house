@@ -1,10 +1,23 @@
 import pika
 import time
 import json
-from datetime import datetime
+from datetime import timedelta
+from math import sqrt, pi, e
 
-def get_pv_value(msg_datetime):
-    return 1
+# Peak x value (mean) is at 2 PM (in seconds)
+mean = 14 * 60 * 60
+# Standard deviation is 3 hours (in seconds)
+std_deviation = 3 * 60 * 60
+# Max PV value (in watts)
+max_pv = 3500
+# The y value when x == mean
+val_at_mean = 1/(std_deviation * sqrt(2 * pi))
+# The multiplier to convert that probability to wattage
+multiplier = max_pv/val_at_mean
+
+
+def get_pv_value(time):
+    return (multiplier/(std_deviation * sqrt(2 * pi))) * e**(-0.5 * ((time - mean)/std_deviation)**2)
 
 def callback(ch, method, properties, body):
     # Acknowledge the message was received
@@ -13,10 +26,10 @@ def callback(ch, method, properties, body):
     # Parse the values
     msg_body = json.loads(body)
     msg_time = int(msg_body["time"])
-    msg_datetime = datetime.fromtimestamp(msg_time)
+    msg_datetime = timedelta(seconds=msg_time)
     msg_meter_value = float(msg_body["meter_value"])
 
-    pv_value = get_pv_value(msg_datetime)
+    pv_value = get_pv_value(msg_time)
     net_usage = pv_value - msg_meter_value
 
     with open('results.txt', 'a') as results:
